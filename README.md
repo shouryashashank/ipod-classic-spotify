@@ -18,13 +18,13 @@ To get started with this awesome tool, follow these simple steps:
 1. **Clone the Repository**
 
 ```bash
-git clone https://github.com/yourgithub/spotify-playlist-downloader.git
-cd spotify-playlist-downloader
+git clone https://github.com/shouryashashank/ipod-classic-spotify.git
+cd ipod-classic-spotify
 ```
 2. **Install Dependencies**
 
 ```bash
-pip install spotipy
+pip install -U -r requirements.txt
 ```
 
 3. **Set Up Spotify API Credentials**
