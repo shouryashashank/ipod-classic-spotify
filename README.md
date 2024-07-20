@@ -38,18 +38,18 @@ pip install -U -r requirements.txt
 - Follow the prompts
 - Enter your Spotify playlist URL when asked, and let the magic happen! 🎩✨
 
-5. **Contributing**
+## **Contributing**
 
 - Love this project? Great! 😍 Contributions are welcome. Here's how you can help:
     - 🐛 Find and report bugs
     - 📝 Update or improve the documentation
     - 🌟 Share your awesome feature ideas
 
-6. **License**
+## **License**
 
 - This project is licensed under the AGPL v3 License - see the LICENSE file for details.
 
-7. **Final Note**
+## **Final Note**
 
 - This tool is for personal use only. Please respect copyright laws and the rights of artists and creators. 🎵👩‍🎤👨‍🎤
 
