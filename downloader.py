@@ -11,6 +11,7 @@ from moviepy.editor import *
 from mutagen.easyid3 import EasyID3
 from mutagen.id3 import APIC, ID3
 from pytube import YouTube
+import pytube.exceptions
 from rich.console import Console
 from spotipy.oauth2 import SpotifyClientCredentials
 
@@ -24,7 +25,7 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 
 def main():
-    if input("fetch spotify").strip() == "y":
+    if input("fetch spotify again[y/N]:").strip() == "y":
         url = validate_url(input("Enter a spotify url: ").strip())
         if "track" in url:
             songs = [get_track_info(url)]
@@ -55,7 +56,7 @@ def main():
             continue
         search_term = f"{track_info['artist_name']} {track_info['track_title']} audio"
         video_link = find_youtube(search_term)
-        audio = download_yt(video_link)
+        audio = download_yt(video_link,search_term)
         if audio:
             # track_info["track_number"] = downloaded + 1
             set_metadata(track_info, audio)
@@ -169,7 +170,7 @@ def find_youtube(query):
     phrase = query.replace(" ", "+")
     search_link = "https://www.youtube.com/results?search_query=" + phrase
     count = 0
-    while count < 3:
+    while count < 5:
         try:
             response = urllib.request.urlopen(search_link)
             break
@@ -207,7 +208,7 @@ def prompt_exists_action():
             return False
         print("---Invalid response---")
 
-def download_yt(yt_link):
+def download_yt(yt_link,search_term):
     """download the video in mp3 format from youtube"""
     yt = YouTube(yt_link)
     # remove chars that can't be in a windows file name
@@ -218,7 +219,28 @@ def download_yt(yt_link):
         return False
 
     # download the music
-    video = yt.streams.filter(only_audio=True).first()
+    max_retries = 3
+    attempt = 0
+    video = None
+
+    while attempt < max_retries:
+        try:
+            video = yt.streams.filter(only_audio=True).first()
+            if video:
+                break
+        except Exception as e:
+            print(f"Attempt {attempt + 1}  {search_term} failed due to: {e}")
+            attempt += 1
+    if not video:
+        print(f"Failed to download {search_term}")
+        # check if a file named failed_downloads.txt exists if not create one and append the failed download
+        if not os.path.exists("failed_downloads.txt"):
+            with open("failed_downloads.txt", "w") as f:
+                f.write(f"{search_term}\n")
+        else:
+            with open("failed_downloads.txt", "a") as f:
+                f.write(f"{search_term}\n")
+        return False
     vid_file = video.download(output_path="../music/tmp")
     # convert the downloaded video to mp3
     base = os.path.splitext(vid_file)[0]
