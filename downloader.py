@@ -14,6 +14,8 @@ from pytube import YouTube
 import pytube.exceptions
 from rich.console import Console
 from spotipy.oauth2 import SpotifyClientCredentials
+import furl
+
 
 SPOTIPY_CLIENT_ID = ""
 SPOTIPY_CLIENT_SECRET = ""
@@ -172,6 +174,7 @@ def find_youtube(query):
     count = 0
     while count < 5:
         try:
+            search_link = furl.furl(search_link).tostr()
             response = urllib.request.urlopen(search_link)
             break
         except:
