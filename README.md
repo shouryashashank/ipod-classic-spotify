@@ -32,6 +32,7 @@ pip install -U -r requirements.txt
 - Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/)
 - Create an app and get your Client ID and Client Secret
 - Replace `SPOTIPY_CLIENT_ID` and `SPOTIPY_CLIENT_SECRET` in the script with your credentials
+- Update the `music_folder_path` with you output dir
 
 4. **Run the Application**
 
