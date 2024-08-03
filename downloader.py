@@ -19,6 +19,7 @@ import furl
 
 SPOTIPY_CLIENT_ID = ""
 SPOTIPY_CLIENT_SECRET = ""
+music_folder_path = "music/"
 
 client_credentials_manager = SpotifyClientCredentials(
     client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET
@@ -62,14 +63,14 @@ def main():
         if audio:
             # track_info["track_number"] = downloaded + 1
             set_metadata(track_info, audio)
-            os.replace(audio, f"../music/{os.path.basename(audio)}")
+            os.replace(audio, f"{music_folder_path}{os.path.basename(audio)}")
             downloaded += 1
             # save the downloaded count to a file
             with open("downloaded.txt", "w") as f:
                 f.write(str(downloaded))
         # else:
             # print("File exists. Skipping...")
-    shutil.rmtree("../music/tmp")
+    shutil.rmtree(f"{music_folder_path}tmp")
     end = time.time()
     print()
     os.chdir("../music")
@@ -217,7 +218,7 @@ def download_yt(yt_link,search_term):
     # remove chars that can't be in a windows file name
     yt.title = "".join([c for c in yt.title if c not in ['/', '\\', '|', '?', '*', ':', '>', '<', '"']])
     # don't download existing files if the user wants to skip them
-    exists = os.path.exists(f"../music/{yt.title}.mp3")
+    exists = os.path.exists(f"{music_folder_path}{yt.title}.mp3")
     if exists and not prompt_exists_action():
         return False
 
@@ -244,7 +245,7 @@ def download_yt(yt_link,search_term):
             with open("failed_downloads.txt", "a") as f:
                 f.write(f"{search_term}\n")
         return False
-    vid_file = video.download(output_path="../music/tmp")
+    vid_file = video.download(output_path=f"{music_folder_path}tmp")
     # convert the downloaded video to mp3
     base = os.path.splitext(vid_file)[0]
     audio_file = base + ".mp3"
@@ -252,8 +253,8 @@ def download_yt(yt_link,search_term):
     mp4_no_frame.write_audiofile(audio_file, logger=None)
     mp4_no_frame.close()
     os.remove(vid_file)
-    os.replace(audio_file, f"../music/tmp/{yt.title}.mp3")
-    audio_file = f"../music/tmp/{yt.title}.mp3"
+    os.replace(audio_file, f"{music_folder_path}tmp/{yt.title}.mp3")
+    audio_file = f"{music_folder_path}tmp/{yt.title}.mp3"
     return audio_file
 
 
